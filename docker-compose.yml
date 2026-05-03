@@ -1,0 +1,76 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: assettrack_db
+    environment:
+      POSTGRES_DB: assettrack
+      POSTGRES_USER: assettrack_user
+      POSTGRES_PASSWORD: assettrack_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U assettrack_user -d assettrack"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - assettrack-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: assettrack_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@assettrack.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - assettrack-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: assettrack_backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/assettrack
+      SPRING_DATASOURCE_USERNAME: assettrack_user
+      SPRING_DATASOURCE_PASSWORD: assettrack_pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - assettrack-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: assettrack_frontend
+    environment:
+      VITE_API_URL: http://localhost:8080/api
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - assettrack-network
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+
+networks:
+  assettrack-network:
+    driver: bridge
