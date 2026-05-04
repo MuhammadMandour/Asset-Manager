@@ -35,14 +35,29 @@ npm run dev
 
 ## Environment Variables (backend/.env)
 ```env
+# JWT Configuration - MUST be Base64-encoded 256-bit key (32 bytes)
+# Generate with: openssl rand -base64 32
+JWT_SECRET=q24GaOQvc7HDVDt0bmX18cFHHYxic1hb2zcJdZZqGmQ=
+
+# Database Configuration
 DB_URL=jdbc:postgresql://localhost:5432/assettrack
 DB_USER=assettrack_user
 DB_PASSWORD=assettrack_pass
-JWT_SECRET=changeme_super_secret_256bit_key_here
+
+# Email Configuration (optional - Mailtrap or MailHog)
 MAIL_HOST=smtp.mailtrap.io
 MAIL_PORT=587
 MAIL_USERNAME=your_mailtrap_username
 MAIL_PASSWORD=your_mailtrap_password
+```
+
+**Note:** JWT_SECRET must be Base64-encoded. For production, generate a new secret:
+```bash
+# Linux/Mac
+openssl rand -base64 32
+
+# PowerShell
+$bytes = New-Object byte[] 32; (New-Object System.Security.Cryptography.RNGCryptoServiceProvider).GetBytes($bytes); [Convert]::ToBase64String($bytes)
 ```
 
 ## Default Test Credentials
