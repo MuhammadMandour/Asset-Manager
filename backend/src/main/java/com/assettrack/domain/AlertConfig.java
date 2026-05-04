@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class AlertConfig {
 
     @Id
+    @Builder.Default
     private Long id = 1L;
 
     private int warrantyWarningDays;

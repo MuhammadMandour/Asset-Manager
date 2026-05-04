@@ -38,12 +38,14 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: assettrack_backend
+    env_file: .env
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/assettrack
       SPRING_DATASOURCE_USERNAME: assettrack_user
       SPRING_DATASOURCE_PASSWORD: assettrack_pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SERVER_PORT: 8080
+      JWT_SECRET: ${JWT_SECRET:-q24GaOQvc7HDVDt0bmX18cFHHYxic1hb2zcJdZZqGmQ=}
     ports:
       - "8080:8080"
     depends_on:

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-05-04T01:09:51+0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.10 (Oracle Corporation)"
+    date = "2026-05-04T12:42:15+0300",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.46.0.v20260407-0427, environment: Java 21.0.10 (Eclipse Adoptium)"
 )
 @Component
 public class AllocationRecordMapperImpl implements AllocationRecordMapper {
@@ -25,10 +25,10 @@ public class AllocationRecordMapperImpl implements AllocationRecordMapper {
 
         AllocationRecordResponse allocationRecordResponse = new AllocationRecordResponse();
 
-        allocationRecordResponse.setId( record.getId() );
-        allocationRecordResponse.setAssignedTo( userMapper.toResponse( record.getAssignedTo() ) );
-        allocationRecordResponse.setAssignedBy( userMapper.toResponse( record.getAssignedBy() ) );
         allocationRecordResponse.setAssignedAt( record.getAssignedAt() );
+        allocationRecordResponse.setAssignedBy( userMapper.toResponse( record.getAssignedBy() ) );
+        allocationRecordResponse.setAssignedTo( userMapper.toResponse( record.getAssignedTo() ) );
+        allocationRecordResponse.setId( record.getId() );
         allocationRecordResponse.setReturnedAt( record.getReturnedAt() );
 
         return allocationRecordResponse;

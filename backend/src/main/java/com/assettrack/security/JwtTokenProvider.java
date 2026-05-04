@@ -21,6 +21,25 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration-ms}")
     private int jwtExpirationMs;
 
+    // Validate secret on startup - fails fast if misconfigured
+    @jakarta.annotation.PostConstruct
+    public void validateSecret() {
+        try {
+            byte[] decodedSecret = Decoders.BASE64.decode(jwtSecret);
+            if (decodedSecret.length < 32) {
+                throw new IllegalArgumentException(
+                    "JWT secret must be at least 256 bits (32 bytes). Current: " +
+                    (decodedSecret.length * 8) + " bits. " +
+                    "Generate a valid secret using JwtKeyGenerator or 'openssl rand -base64 32'"
+                );
+            }
+            log.info("✓ JWT secret validated: {} bits", decodedSecret.length * 8);
+        } catch (IllegalArgumentException e) {
+            log.error("❌ FATAL: Invalid JWT secret configuration - {}", e.getMessage());
+            throw new RuntimeException("JWT secret configuration error", e);
+        }
+    }
+
     public String generateToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 

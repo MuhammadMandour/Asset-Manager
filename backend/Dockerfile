@@ -1,5 +1,5 @@
 # Build stage
-FROM maven:3.9-eclipse-temurin-17 AS builder
+FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
 
 # Copy pom.xml and download dependencies
@@ -11,11 +11,11 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Runtime stage
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 
 # Copy built JAR from builder stage
-COPY --from=builder /app/target/assettrack-*.jar app.jar
+COPY --from=builder /app/target/backend-*.jar app.jar
 
 # Expose port
 EXPOSE 8080

@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-05-04T01:09:51+0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.10 (Oracle Corporation)"
+    date = "2026-05-04T12:42:15+0300",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.46.0.v20260407-0427, environment: Java 21.0.10 (Eclipse Adoptium)"
 )
 @Component
 public class AssetMapperImpl implements AssetMapper {
@@ -36,18 +36,18 @@ public class AssetMapperImpl implements AssetMapper {
 
         AssetResponse assetResponse = new AssetResponse();
 
-        assetResponse.setId( asset.getId() );
-        assetResponse.setType( asset.getType() );
         assetResponse.setBrand( asset.getBrand() );
-        assetResponse.setModel( asset.getModel() );
-        assetResponse.setSerialNumber( asset.getSerialNumber() );
-        assetResponse.setPurchaseDate( asset.getPurchaseDate() );
-        assetResponse.setWarrantyExpirationDate( asset.getWarrantyExpirationDate() );
-        assetResponse.setStatus( asset.getStatus() );
         assetResponse.setCondition( asset.getCondition() );
-        assetResponse.setCurrentOwner( userMapper.toResponse( asset.getCurrentOwner() ) );
         assetResponse.setCreatedAt( asset.getCreatedAt() );
+        assetResponse.setCurrentOwner( userMapper.toResponse( asset.getCurrentOwner() ) );
+        assetResponse.setId( asset.getId() );
+        assetResponse.setModel( asset.getModel() );
+        assetResponse.setPurchaseDate( asset.getPurchaseDate() );
+        assetResponse.setSerialNumber( asset.getSerialNumber() );
+        assetResponse.setStatus( asset.getStatus() );
+        assetResponse.setType( asset.getType() );
         assetResponse.setUpdatedAt( asset.getUpdatedAt() );
+        assetResponse.setWarrantyExpirationDate( asset.getWarrantyExpirationDate() );
 
         assetResponse.setWarrantyStatus( computeWarrantyStatus(asset) );
 
@@ -62,18 +62,18 @@ public class AssetMapperImpl implements AssetMapper {
 
         AssetDetailResponse assetDetailResponse = new AssetDetailResponse();
 
-        assetDetailResponse.setId( asset.getId() );
-        assetDetailResponse.setType( asset.getType() );
         assetDetailResponse.setBrand( asset.getBrand() );
-        assetDetailResponse.setModel( asset.getModel() );
-        assetDetailResponse.setSerialNumber( asset.getSerialNumber() );
-        assetDetailResponse.setPurchaseDate( asset.getPurchaseDate() );
-        assetDetailResponse.setWarrantyExpirationDate( asset.getWarrantyExpirationDate() );
-        assetDetailResponse.setStatus( asset.getStatus() );
         assetDetailResponse.setCondition( asset.getCondition() );
-        assetDetailResponse.setCurrentOwner( userMapper.toResponse( asset.getCurrentOwner() ) );
         assetDetailResponse.setCreatedAt( asset.getCreatedAt() );
+        assetDetailResponse.setCurrentOwner( userMapper.toResponse( asset.getCurrentOwner() ) );
+        assetDetailResponse.setId( asset.getId() );
+        assetDetailResponse.setModel( asset.getModel() );
+        assetDetailResponse.setPurchaseDate( asset.getPurchaseDate() );
+        assetDetailResponse.setSerialNumber( asset.getSerialNumber() );
+        assetDetailResponse.setStatus( asset.getStatus() );
+        assetDetailResponse.setType( asset.getType() );
         assetDetailResponse.setUpdatedAt( asset.getUpdatedAt() );
+        assetDetailResponse.setWarrantyExpirationDate( asset.getWarrantyExpirationDate() );
         assetDetailResponse.setAllocationHistory( allocationRecordListToAllocationRecordResponseList( asset.getAllocationHistory() ) );
         assetDetailResponse.setConditionReports( conditionReportListToConditionReportResponseList( asset.getConditionReports() ) );
 

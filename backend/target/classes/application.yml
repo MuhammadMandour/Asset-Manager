@@ -24,7 +24,7 @@ spring:
       mail.smtp.starttls.enable: true
 
 jwt:
-  secret: ${JWT_SECRET:changeme_super_secret_256bit_key_here_for_assettrack_project_that_is_long_enough}
+  secret: ${JWT_SECRET:q24GaOQvc7HDVDt0bmX18cFHHYxic1hb2zcJdZZqGmQ=}
   expiration-ms: 86400000
 
 app:
