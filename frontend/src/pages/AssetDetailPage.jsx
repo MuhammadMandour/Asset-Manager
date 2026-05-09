@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getAssetById } from '../api/assetService';
-import { getReportsForAsset } from '../api/conditionReportService';
+import { resolveReport } from '../api/conditionReportService';
 import AssetCard from '../components/AssetCard';
 import ConditionReportModal from '../components/ConditionReportModal';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useAuth } from '../context/AuthContext';
 import { format } from 'date-fns';
-import { AlertCircle, History, FileWarning, ArrowLeft } from 'lucide-react';
+import { AlertCircle, History, FileWarning, ArrowLeft, CheckCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const AssetDetailPage = () => {
   const { id } = useParams();
@@ -15,6 +16,22 @@ const AssetDetailPage = () => {
   const [assetDetail, setAssetDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [resolvingId, setResolvingId] = useState(null);
+
+  const canResolve = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+
+  const handleResolve = async (reportId) => {
+    setResolvingId(reportId);
+    try {
+      await resolveReport(reportId);
+      toast.success('Report resolved successfully');
+      fetchAssetDetail();
+    } catch (e) {
+      toast.error('Failed to resolve report');
+    } finally {
+      setResolvingId(null);
+    }
+  };
 
   const fetchAssetDetail = async () => {
     try {
@@ -72,18 +89,30 @@ const AssetDetailPage = () => {
                 <ul className="divide-y divide-gray-200">
                   {assetDetail.conditionReports.map(report => (
                     <li key={report.id} className="p-4">
-                      <div className="flex justify-between items-start">
-                        <div>
+                      <div className="flex justify-between items-start gap-3">
+                        <div className="flex-1">
                           <p className="text-sm text-gray-900">{report.description}</p>
                           <p className="text-xs text-gray-500 mt-1">Reported by {report.reportedBy.fullName} on {format(new Date(report.reportedAt), 'PPP')}</p>
+                          {report.resolved && (
+                            <p className="text-xs text-gray-500 mt-1 italic">Resolved by {report.resolvedBy?.fullName} on {format(new Date(report.resolvedAt), 'PPP')}</p>
+                          )}
                         </div>
-                        <span className={`px-2 py-1 text-xs rounded-full ${report.resolved ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                          {report.resolved ? 'Resolved' : 'Unresolved'}
-                        </span>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <span className={`px-2 py-1 text-xs rounded-full ${report.resolved ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                            {report.resolved ? 'Resolved' : 'Unresolved'}
+                          </span>
+                          {canResolve && !report.resolved && (
+                            <button
+                              onClick={() => handleResolve(report.id)}
+                              disabled={resolvingId === report.id}
+                              className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <CheckCircle className="w-3 h-3" />
+                              {resolvingId === report.id ? 'Resolving...' : 'Resolve'}
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      {report.resolved && (
-                        <p className="text-xs text-gray-500 mt-2 italic">Resolved by {report.resolvedBy?.fullName} on {format(new Date(report.resolvedAt), 'PPP')}</p>
-                      )}
                     </li>
                   ))}
                 </ul>
