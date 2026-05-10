@@ -29,10 +29,12 @@ public class ReportService {
 
     @Transactional(readOnly = true)
     public Map<String, Object> getUsageStatistics(LocalDate from, LocalDate to) {
-        // Mocked comprehensive logic for usage statistics within a timeframe
         Map<String, Object> stats = new HashMap<>();
         stats.put("message", "Detailed allocation statistics between " + from + " and " + to);
-        stats.put("totalAllocations", allocationRecordRepository.count());
+        stats.put("totalAllocations", allocationRecordRepository.countByAssignedAtBetween(
+                from.atStartOfDay(),
+                to.atTime(23, 59, 59, 999999999)
+        ));
         return stats;
     }
 

@@ -1,12 +1,9 @@
 package com.assettrack;
 
-import com.assettrack.domain.Asset;
-import com.assettrack.domain.AssetCondition;
-import com.assettrack.domain.AssetStatus;
-import com.assettrack.domain.AssetType;
-import com.assettrack.domain.Role;
-import com.assettrack.domain.User;
+import com.assettrack.domain.*;
+import com.assettrack.repository.AllocationRecordRepository;
 import com.assettrack.repository.AssetRepository;
+import com.assettrack.repository.ConditionReportRepository;
 import com.assettrack.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -23,6 +21,8 @@ public class DataLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final AssetRepository assetRepository;
+    private final AllocationRecordRepository allocationRecordRepository;
+    private final ConditionReportRepository conditionReportRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -103,6 +103,30 @@ public class DataLoader implements CommandLineRunner {
                     .condition(AssetCondition.POOR)
                     .build();
             assetRepository.save(mouse);
+
+            // Seed Allocation History (Usage Statistics count these 'assignedAt' dates)
+            allocationRecordRepository.save(AllocationRecord.builder()
+                    .asset(laptop1)
+                    .assignedTo(dev)
+                    .assignedBy(admin)
+                    .assignedAt(LocalDateTime.now().minusDays(2))
+                    .build());
+
+            allocationRecordRepository.save(AllocationRecord.builder()
+                    .asset(monitor1)
+                    .assignedTo(dev)
+                    .assignedBy(admin)
+                    .assignedAt(LocalDateTime.now().minusDays(5)) // Within the last 30 days for report testing
+                    .build());
+
+            // Seed an unresolved Condition Report
+            conditionReportRepository.save(ConditionReport.builder()
+                    .asset(laptop2) // Dell XPS (Available)
+                    .reportedBy(dev)
+                    .description("Screen has a dead pixel in the center.")
+                    .reportedAt(LocalDateTime.now().minusHours(2))
+                    .resolved(false)
+                    .build());
 
             log.info("Seeding completed.");
         }
