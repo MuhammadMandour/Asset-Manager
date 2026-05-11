@@ -1,0 +1,12 @@
+backend
+.git
+.github
+.vscode
+docker-compose.yml
+Dockerfile
+README.md
+SPECIFICATION_COMPLIANCE.md
+.env
+.env.local
+.sixth
+node_modules
